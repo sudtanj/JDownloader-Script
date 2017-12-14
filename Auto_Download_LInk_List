@@ -1,0 +1,29 @@
+//Add your script here. Feel free to use the available api properties and methods
+var myObject = new Object();
+myObject.links = "https://script.google.com/macros/s/AKfycbzQQVYD9NEN1j-TXOtxbIrqtc79zazFGYz-MV50S1aQ-MMANjKa/exec";
+myObject.autostart = true;
+myObject = callAPI("linkgrabberv2", "addLinks", myObject);
+var downloadlink = getCrawledLinkByUUID(myObject.id);
+var success = false;
+var myString;
+while (success == false) {
+    try {
+        myString = readFile("D:/Downloads/jdownloader/jdownloader.txt");
+        success = true
+    } catch (e) {}
+}
+var downloadlist = myString.split("\r\n");
+var myDownloadLink = new Array();
+myDownloadLink = getAllDownloadLinks();
+for (i in myDownloadLink) {
+    if (myDownloadLink[i].getName().indexOf("jdownloader") > -1) {
+        myDownloadLink[i].remove();
+    }
+}
+deleteFile("D:/Downloads/jdownloader", true);
+for (i in downloadlist) {
+    myObject = new Object();
+    myObject.links = downloadlist[i];
+    myObject.autostart = false;
+    myObject = callAPI("linkgrabberv2", "addLinks", myObject);
+}
