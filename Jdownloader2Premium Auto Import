@@ -1,0 +1,22 @@
+//Add your script here. Feel free to use the available api properties and methods
+var myDownloadLink = new Array();
+myDownloadLink = getAllDownloadLinks();
+var interrupt = false;
+for (i in myDownloadLink) {
+    var myArchive = myDownloadLink[i].getDownloadPath();
+    myArchive = myArchive.replace(".rar", "");
+    var getPathString = getPath(myArchive).getChildren();
+    if (getPathString != null)
+        for (j in getPathString) {
+            if (getPathString[j].getName().indexOf("org.jdownloader.settings.AccountSettings.accounts") > -1) {
+                if (myDownloadLink[i].isFinished()) {
+                    getPath(myDownloadLink[i].getDownloadPath()).getParent().deleteRecursive();
+                    myDownloadLink[i].remove();
+                    interrupt = true;
+                    break;
+                }
+            }
+        }
+    if (interrupt == true)
+        break;
+}
